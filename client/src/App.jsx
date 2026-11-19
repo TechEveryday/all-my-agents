@@ -6,6 +6,7 @@ import MyWork from './pages/MyWork.jsx';
 import Workflow from './pages/Workflow.jsx';
 import PullRequests from './pages/PullRequests.jsx';
 import Settings from './pages/Settings.jsx';
+import AgentDrawer from './pages/AgentDrawer.jsx';
 
 const PAGES = [
   { id: 'work', label: 'My Work' },
@@ -96,6 +97,28 @@ export default function App() {
   const [tick, setTick] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const settings = useApi('/settings', [tick]);
+  const streams = useApi('/streams', [tick]);
+  const models = useApi('/models', [tick]);
+  // The Agent Activity rail lives here so it stays open while you switch tabs.
+  const [railId, setRailId] = useState(() => {
+    try { return localStorage.getItem('ama-rail') || null; } catch { return null; }
+  });
+  useEffect(() => {
+    try { railId ? localStorage.setItem('ama-rail', railId) : localStorage.removeItem('ama-rail'); } catch { /* storage unavailable */ }
+  }, [railId]);
+
+  useEvent('stream', (s) =>
+    streams.setData((d) => {
+      if (!d) return d;
+      const exists = d.streams.some((x) => x.id === s.id);
+      return { streams: exists ? d.streams.map((x) => (x.id === s.id ? { ...x, ...s } : x)) : [s, ...d.streams] };
+    }),
+  );
+  useEvent('stream-removed', ({ id }) => {
+    streams.setData((d) => d && { streams: d.streams.filter((x) => x.id !== id) });
+    setRailId((cur) => (cur === id ? null : cur));
+  });
+  const railStream = streams.data?.streams.find((s) => s.id === railId);
 
   useEffect(() => {
     try { localStorage.setItem('ama-page', page); } catch { /* storage unavailable */ }
@@ -116,18 +139,21 @@ export default function App() {
   };
 
   return (
+    <div className={`layout ${railStream ? 'with-rail' : ''}`}>
     <div className="app">
       <Header onRefresh={refresh} refreshing={refreshing} />
       <nav className="page-tabs">
         <Tabs tabs={PAGES} value={page} onChange={setPage} />
       </nav>
       <main>
-        {page === 'work' && <MyWork tick={tick} />}
+        {page === 'work' && <MyWork tick={tick} streams={streams} railId={railStream ? railId : null} onOpenRail={setRailId} />}
         {page === 'workflow' && <Workflow tick={tick} />}
         {page === 'prs' && <PullRequests tick={tick} />}
         {page === 'settings' && <Settings tick={tick} onSaved={() => setTick((t) => t + 1)} />}
       </main>
       <Toasts />
+    </div>
+    {railStream && <AgentDrawer stream={railStream} models={models.data?.models || []} onClose={() => setRailId(null)} />}
     </div>
   );
 }

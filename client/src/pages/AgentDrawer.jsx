@@ -24,12 +24,6 @@ export default function AgentDrawer({ stream, models, onClose }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stream.id]);
 
-  useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && onClose();
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
-
   useEvent('activity', ({ streamId, entry }) => {
     if (streamId === stream.id) setActivity((a) => (a ? [...a, entry] : a));
   });
@@ -62,7 +56,6 @@ export default function AgentDrawer({ stream, models, onClose }) {
 
   return (
     <>
-      <div className="drawer-scrim" onClick={onClose} />
       <aside className="drawer" aria-label="Agent Activity">
         <div className="drawer-head">
           <div>
@@ -76,7 +69,7 @@ export default function AgentDrawer({ stream, models, onClose }) {
             </h3>
             <div className="drawer-summary">{stream.ticket.summary}</div>
           </div>
-          <button className="icon-btn" onClick={onClose} aria-label="Close"><XIcon /></button>
+          <button className="icon-btn" onClick={onClose} aria-label="Close Agent Activity" title="Close Agent Activity"><XIcon /></button>
         </div>
 
         <div className="drawer-meta">
