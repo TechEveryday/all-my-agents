@@ -6,7 +6,7 @@ import { CopyButton, WorktreeTools, formatCost } from '../components/PathTools.j
 
 const FINISHED = ['Merged', 'Closed', 'Done'];
 
-export default function Streams({ streams, steps = [], loading, error, onOpen, activeId }) {
+export default function Streams({ streams, steps = [], loading, error, onOpen, onOpenActivity, activeId }) {
   const open = streams.filter((s) => !FINISHED.includes(s.status));
   const finished = streams.filter((s) => FINISHED.includes(s.status));
   const total = streams.reduce((sum, s) => sum + (s.costUsd || 0), 0);
@@ -60,7 +60,7 @@ export default function Streams({ streams, steps = [], loading, error, onOpen, a
           <span className="cost">{cost.text}</span>
         </td>
         <td className="col-actions" onClick={(e) => e.stopPropagation()}>
-          <StreamMenu stream={s} steps={steps} onOpenActivity={() => onOpen(s.id)} />
+          <StreamMenu stream={s} steps={steps} onOpenActivity={() => (onOpenActivity || onOpen)(s.id)} />
         </td>
       </tr>
     );
