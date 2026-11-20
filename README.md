@@ -4,6 +4,61 @@ Dashboard type views of the SDLC of a ticket: pull work from Jira / GitHub issue
 agents (Claude Code, Cursor Agent, Codex) carry it from plan to merged PR, each ticket in its own git
 worktree.
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/agent-activity-dark.png">
+  <img alt="My Work with the Agent Activity rail open: the To Do queue and In-Progress streams on the left, a running agent's log and prompt box on the right" src="docs/screenshots/agent-activity-light.png">
+</picture>
+
+## Screenshots
+
+### My Work
+The To Do queue (Jira, GitHub issues and your own tasks) above the In-Progress streams. Each stream shows its
+stage, status, running agent cost, branch, and worktree path with copy and open buttons.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/my-work-dark.png">
+  <img alt="My Work tab with the To Do queue and In-Progress streams" src="docs/screenshots/my-work-light.png">
+</picture>
+
+### Stream actions
+Launch the app at the ticket's branch, stop agents, skip Validation, or advance to any step when work happened
+outside the tool.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/actions-menu-dark.png">
+  <img alt="A stream's Actions menu with Advance to expanded" src="docs/screenshots/actions-menu-light.png">
+</picture>
+
+### Workflow
+The steps every claimed ticket runs through, each as a skill or script with its own model and effort.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/workflow-dark.png">
+  <img alt="Workflow tab listing Plan through Resolve PR Feedback" src="docs/screenshots/workflow-light.png">
+</picture>
+
+### Pull Requests
+Your open PRs and the ones waiting on your review, with Approve, Merge and Fix it.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/pull-requests-dark.png">
+  <img alt="Pull Requests tab with readiness dots and actions" src="docs/screenshots/pull-requests-light.png">
+</picture>
+
+<details>
+<summary><strong>Settings</strong></summary>
+
+Folders, automation toggles, <code>.env</code> values, agent harnesses and discovered skills.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/settings-dark.png">
+  <img alt="Settings tab: Workplace, Environment, Agent harnesses, Skills and plugins" src="docs/screenshots/settings-light.png">
+</picture>
+</details>
+
+Screenshots use demo data. Regenerate them with `npm run screenshots` (needs Google Chrome; see
+`tools/screenshots/`).
+
 ## Run it
 
 Requires Node 20+ (`nvm use`), git, and the [`gh` CLI](https://cli.github.com/) (used by the PR scripts).
